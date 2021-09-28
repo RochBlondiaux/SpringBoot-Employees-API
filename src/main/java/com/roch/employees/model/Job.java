@@ -17,4 +17,7 @@ public class Job {
     private String name;
 
     private double salary;
+
+    public Job() {
+    }
 }

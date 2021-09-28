@@ -21,7 +21,7 @@ INSERT INTO jobs (name, salary) VALUES
   ('CTO', 20000),
   ('CEO', 30000);
 
-INSERT INTO employees (first_name, last_name, mail, password) VALUES
-  ('Laurent', 'GINA', 'laurentgina@mail.com', 'laurent'),
-  ('Sophie', 'FONCEK', 'sophiefoncek@mail.com', 'sophie'),
-  ('Agathe', 'FEELING', 'agathefeeling@mail.com', 'agathe');
+INSERT INTO employees (first_name, last_name, mail, password, hire_date, job) VALUES
+  ('Laurent', 'GINA', 'laurentgina@mail.com', 'laurent1253', NOW(), 'Collaborator'),
+  ('Sophie', 'FONCEK', 'sophiefoncek@mail.com', '$12sophie12*', NOW(), 'CTO'),
+  ('Agathe', 'FEELING', 'agathefeeling@mail.com', 'agath35e', NOW(), 'CEO');

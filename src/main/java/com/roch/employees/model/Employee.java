@@ -32,9 +32,14 @@ public class Employee {
     private String password;
 
     @Setter
+    @JoinTable(name = "job", joinColumns = @JoinColumn(name="name"))
+    @OneToOne
     private Job job;
 
     @Temporal(TemporalType.DATE)
     @Column(name = "hire_date", nullable = false)
     private Date hireDate;
+
+    public Employee() {
+    }
 }
