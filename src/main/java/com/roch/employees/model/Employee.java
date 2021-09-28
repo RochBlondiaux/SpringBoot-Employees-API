@@ -32,7 +32,7 @@ public class Employee {
     private String password;
 
     @Setter
-    @JoinTable(name = "job", joinColumns = @JoinColumn(name="name"))
+    @JoinTable(name = "employees_jobs", joinColumns = @JoinColumn(name="id"))
     @OneToOne
     private Job job;
 

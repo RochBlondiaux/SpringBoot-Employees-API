@@ -20,12 +20,12 @@ public class JobService {
     @Autowired
     private JobRepository repository;
 
-    public Job create(@NonNull String name, @NonNull int salary) {
-        Job job = new Job();
-        job.setName(name);
-        job.setSalary(salary);
+    public Job create(@NonNull Job job) {
+        return repository.save(job);
+    }
+
+    public void update(@NonNull Job job) {
         repository.save(job);
-        return job;
     }
 
     public Optional<Job> getByName(@NonNull String name) {

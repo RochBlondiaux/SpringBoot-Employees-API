@@ -6,9 +6,13 @@ import com.roch.employees.service.JobService;
 import lombok.Data;
 import lombok.NonNull;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+
+import java.net.URI;
+import java.util.Objects;
+import java.util.Optional;
 
 /**
  * @author Roch Blondiaux
@@ -41,5 +45,38 @@ public class JobController {
     public Job getJob(@NonNull @PathVariable("name") String name) {
         return service.getByName(name)
                 .orElseThrow(() -> new JobNotFoundException(String.format("Cannot find any job with name '%s'!", name)));
+    }
+
+    /**
+     * Create a new job.
+     *
+     * @param job Job to be saved.
+     * @return HTTP response status code with the created job.
+     */
+    @PostMapping("/jobs")
+    public ResponseEntity<Void> createJob(@RequestBody Job job) {
+        Job job1 = service.create(job);
+        System.out.println("I : " + Objects.isNull(job) + " Null: " + Objects.isNull(job1));
+        if (Objects.isNull(job1))
+            return ResponseEntity.noContent().build();
+        URI location = ServletUriComponentsBuilder.fromCurrentRequest()
+                .path("/{name}")
+                .buildAndExpand(job1.getName())
+                .toUri();
+        return ResponseEntity.created(location)
+                .build();
+    }
+
+    /**
+     * Delete a job.
+     *
+     * @param job job to delete.
+     * @return HTTP response status code, "ok" (200) if the job was deleted successfully, otherwise "no content".
+     */
+    @DeleteMapping("/jobs")
+    public ResponseEntity<Void> deleteJob(@RequestBody Job job) {
+        service.delete(job);
+        return ResponseEntity.ok()
+                .build();
     }
 }
