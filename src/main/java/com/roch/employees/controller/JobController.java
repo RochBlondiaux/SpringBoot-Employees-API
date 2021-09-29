@@ -12,7 +12,6 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
 import java.util.Objects;
-import java.util.Optional;
 
 /**
  * @author Roch Blondiaux
@@ -41,7 +40,7 @@ public class JobController {
      * @param name job's name.
      * @return A filled job object if it exists, otherwise it throws an exception.
      */
-    @GetMapping("/job/{name}")
+    @GetMapping("/jobs/{name}")
     public Job getJob(@NonNull @PathVariable("name") String name) {
         return service.getByName(name)
                 .orElseThrow(() -> new JobNotFoundException(String.format("Cannot find any job with name '%s'!", name)));
@@ -56,7 +55,6 @@ public class JobController {
     @PostMapping("/jobs")
     public ResponseEntity<Void> createJob(@RequestBody Job job) {
         Job job1 = service.create(job);
-        System.out.println("I : " + Objects.isNull(job) + " Null: " + Objects.isNull(job1));
         if (Objects.isNull(job1))
             return ResponseEntity.noContent().build();
         URI location = ServletUriComponentsBuilder.fromCurrentRequest()
@@ -75,6 +73,8 @@ public class JobController {
      */
     @DeleteMapping("/jobs")
     public ResponseEntity<Void> deleteJob(@RequestBody Job job) {
+        if (service.getByName(job.getName()).isEmpty())
+            return ResponseEntity.noContent().build();
         service.delete(job);
         return ResponseEntity.ok()
                 .build();

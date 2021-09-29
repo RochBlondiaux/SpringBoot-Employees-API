@@ -4,19 +4,14 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.roch.employees.model.Job;
-import com.roch.employees.service.JobService;
-import org.aspectj.lang.annotation.Before;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.web.context.WebApplicationContext;
 
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -25,34 +20,43 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  * www.roch-blondiaux.com
  */
 @SpringBootTest
-@AutoConfigureMockMvc
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
+@AutoConfigureMockMvc
 public class JobsControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
 
-    @MockBean
-    private JobService service;
+    private static Job validJob;
+    private static Job invalidJob;
+    private static ObjectWriter mapper;
 
-    @Autowired
-    private ObjectMapper objectMapper;
+    @BeforeAll
+    static void beforeAll() {
+        validJob = new Job();
+        validJob.setSalary(5300000);
+        validJob.setName("CEO");
+
+        invalidJob = new Job();
+        invalidJob.setName("ZE");
+
+        mapper = new ObjectMapper()
+                .configure(SerializationFeature.WRAP_ROOT_VALUE, false)
+                .writer()
+                .withDefaultPrettyPrinter();
+    }
+
+    @BeforeEach
+    void setUp() {
+        assert validJob != null;
+    }
 
     @Test
     @Order(1)
     public void testCreateJob() throws Exception {
-        Job job;
-        job = new Job();
-        job.setName("Collaborator");
-        job.setSalary(10000);
-
-        ObjectMapper mapper = new ObjectMapper().configure(SerializationFeature.WRAP_ROOT_VALUE, false);
-        ObjectWriter ow = mapper.writer().withDefaultPrettyPrinter();
-        String requestJson=ow.writeValueAsString( job);
-
         mockMvc.perform(post("/jobs")
                         .contentType(MediaType.APPLICATION_JSON_VALUE)
-                        .content(objectMapper.writeValueAsString(requestJson))
+                        .content(mapper.writeValueAsString(validJob))
                         .accept(MediaType.APPLICATION_JSON)
                         .characterEncoding("utf-8"))
                 .andExpect(status().isCreated());
@@ -61,9 +65,9 @@ public class JobsControllerTest {
     @Test
     @Order(2)
     public void testGetJob() throws Exception {
-        mockMvc.perform(get("/job/CTO"))
+        mockMvc.perform(get("/jobs/" + validJob.getName()))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("salary").value(20000));
+                .andExpect(jsonPath("salary").value(validJob.getSalary()));
     }
 
     @Test
@@ -71,8 +75,36 @@ public class JobsControllerTest {
     public void testGetJobs() throws Exception {
         mockMvc.perform(get("/jobs"))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$[0].name").value("Collaborator"))
-                .andExpect(jsonPath("$[1].salary").value(20000));
+                .andExpect(jsonPath("$[0].name").value(validJob.getName()))
+                .andExpect(jsonPath("$[0].salary").value(validJob.getSalary()));
     }
 
+    @Test
+    @Order(4)
+    public void testDeleteJob() throws Exception {
+        mockMvc.perform(delete("/jobs")
+                        .contentType(MediaType.APPLICATION_JSON_VALUE)
+                        .content(mapper.writeValueAsString(validJob))
+                        .accept(MediaType.APPLICATION_JSON)
+                        .characterEncoding("utf-8"))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    @Order(5)
+    public void testGetDeletedJob() throws Exception {
+        mockMvc.perform(get("/jobs/" + validJob.getName()))
+                .andExpect(status().isNotFound());
+    }
+
+    @Test
+    @Order(5)
+    public void testDeleteInvalidJob() throws Exception {
+        mockMvc.perform(delete("/jobs/")
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .content(mapper.writeValueAsString(invalidJob))
+                .accept(MediaType.APPLICATION_JSON)
+                .characterEncoding("utf-8"))
+                .andExpect(status().isNoContent());
+    }
 }

@@ -72,11 +72,11 @@ public class EmployeeControllerTest {
     @Test
     @Order(2)
     public void testGetSpecificEmployee() throws Exception {
-        mockMvc.perform(MockMvcRequestBuilders.get("/employees/1"))
+        mockMvc.perform(MockMvcRequestBuilders.get("/employees/" + validEmployee.getId()))
                 .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(jsonPath("firstName").value("Test"))
-                .andExpect(jsonPath("lastName").value("Spring"))
-                .andExpect(jsonPath("mail").value("test@roch-blondiaux.com"));
+                .andExpect(jsonPath("firstName").value(validEmployee.getFirstName()))
+                .andExpect(jsonPath("lastName").value(validEmployee.getLastName()))
+                .andExpect(jsonPath("mail").value(validEmployee.getMail()));
     }
 
     @Test
@@ -89,7 +89,7 @@ public class EmployeeControllerTest {
                         .accept(MediaType.APPLICATION_JSON)
                         .characterEncoding("utf-8"))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("firstName").value("Hulk"));
+                .andExpect(jsonPath("firstName").value(validEmployee.getFirstName()));
     }
 
     @Test
@@ -97,9 +97,9 @@ public class EmployeeControllerTest {
     public void testGetEmployees() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders.get("/employees"))
                 .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(jsonPath("$[0].firstName").value("Hulk"))
-                .andExpect(jsonPath("$[0].lastName").value("Spring"))
-                .andExpect(jsonPath("$[0].mail").value("test@roch-blondiaux.com"));
+                .andExpect(jsonPath("$[0].firstName").value(validEmployee.getFirstName()))
+                .andExpect(jsonPath("$[0].lastName").value(validEmployee.getLastName()))
+                .andExpect(jsonPath("$[0].mail").value(validEmployee.getMail()));
     }
 
     @Test
@@ -112,7 +112,7 @@ public class EmployeeControllerTest {
                         .characterEncoding("utf-8"))
                 .andExpect(status().isOk());
 
-        mockMvc.perform(MockMvcRequestBuilders.get("/employees/1"))
+        mockMvc.perform(MockMvcRequestBuilders.get("/employees/" + validEmployee.getId()))
                 .andExpect(MockMvcResultMatchers.status().isNotFound());
     }
 
