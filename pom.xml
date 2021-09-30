@@ -8,14 +8,17 @@
 		<version>2.5.5</version>
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
-	<groupId>com.roch</groupId>
-	<artifactId>employees</artifactId>
+	<groupId>com.roch.employees</groupId>
+	<artifactId>api</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>employees</name>
+
+	<name>employees-api</name>
 	<description>A simple api to manage a company&apos;s employees.</description>
+
 	<properties>
 		<java.version>11</java.version>
 	</properties>
+
 	<dependencies>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>

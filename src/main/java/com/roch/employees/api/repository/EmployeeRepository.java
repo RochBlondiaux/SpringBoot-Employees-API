@@ -1,6 +1,6 @@
-package com.roch.employees.repository;
+package com.roch.employees.api.repository;
 
-import com.roch.employees.model.Job;
+import com.roch.employees.api.model.Employee;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -9,5 +9,5 @@ import org.springframework.stereotype.Repository;
  * www.roch-blondiaux.com
  */
 @Repository
-public interface JobRepository extends JpaRepository<Job, String> {
+public interface EmployeeRepository extends JpaRepository<Employee, Integer> {
 }

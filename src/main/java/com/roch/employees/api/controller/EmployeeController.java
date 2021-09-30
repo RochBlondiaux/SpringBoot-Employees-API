@@ -1,8 +1,8 @@
-package com.roch.employees.controller;
+package com.roch.employees.api.controller;
 
-import com.roch.employees.exceptions.EmployeeNotFoundException;
-import com.roch.employees.model.Employee;
-import com.roch.employees.service.EmployeeService;
+import com.roch.employees.api.exceptions.EmployeeNotFoundException;
+import com.roch.employees.api.model.Employee;
+import com.roch.employees.api.service.EmployeeService;
 import lombok.Data;
 import lombok.NonNull;
 import org.springframework.beans.factory.annotation.Autowired;

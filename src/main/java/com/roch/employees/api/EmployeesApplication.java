@@ -1,4 +1,4 @@
-package com.roch.employees;
+package com.roch.employees.api;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

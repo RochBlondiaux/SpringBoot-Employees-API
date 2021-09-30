@@ -1,4 +1,4 @@
-package com.roch.employees.model;
+package com.roch.employees.api.model;
 
 import lombok.Data;
 import lombok.Setter;

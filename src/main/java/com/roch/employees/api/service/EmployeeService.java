@@ -1,7 +1,7 @@
-package com.roch.employees.service;
+package com.roch.employees.api.service;
 
-import com.roch.employees.model.Employee;
-import com.roch.employees.repository.EmployeeRepository;
+import com.roch.employees.api.model.Employee;
+import com.roch.employees.api.repository.EmployeeRepository;
 import lombok.Data;
 import lombok.NonNull;
 import org.springframework.beans.factory.annotation.Autowired;
